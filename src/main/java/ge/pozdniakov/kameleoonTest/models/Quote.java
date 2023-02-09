@@ -1,6 +1,7 @@
 package ge.pozdniakov.kameleoonTest.models;
 
-import javax.persistence.*;
+
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,8 +13,8 @@ public class Quote {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "text")
-    private String text;
+    @Column(name = "content")
+    private String content;
 
     @Column(name = "rate")
     private Long rate;
@@ -36,12 +37,12 @@ public class Quote {
         this.id = id;
     }
 
-    public String getText() {
-        return text;
+    public String getContent() {
+        return content;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Long getRate() {

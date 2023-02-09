@@ -1,13 +1,15 @@
 package ge.pozdniakov.kameleoonTest.services;
 
+import ge.pozdniakov.kameleoonTest.dto.UserDTO;
 import ge.pozdniakov.kameleoonTest.models.User;
 import ge.pozdniakov.kameleoonTest.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
@@ -17,8 +19,13 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    @Transactional
-    public void addNewUser(User user){
+    public void addNewUser(UserDTO userDTO){
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword());
+        user.setCreatedAt(LocalDateTime.now());
+
         userRepository.save(user);
     }
 
@@ -26,4 +33,7 @@ public class UserService {
         return userRepository.findByUsernameAndPassword(username, password);
     }
 
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
 }

@@ -39,10 +39,11 @@ public class QuoteService {
         quoteRepository.delete(quote);
     }
 
+    //todo refactoring this method
     public Quote showRandom(){
-        int randomId = ThreadLocalRandom.current().nextInt(quoteRepository.findAll().size());
+        Long randomId = ThreadLocalRandom.current().nextLong(quoteRepository.count());
         return quoteRepository
                 .findAll()
-                .get(randomId);
+                .get(randomId.intValue());
     }
 }

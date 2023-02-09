@@ -1,0 +1,8 @@
+services:
+  kameleoon:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: kameleoontest
+    ports:
+      - "8080:8080"
