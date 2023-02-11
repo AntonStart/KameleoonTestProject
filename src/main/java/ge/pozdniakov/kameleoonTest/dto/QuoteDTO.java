@@ -1,34 +1,72 @@
 package ge.pozdniakov.kameleoonTest.dto;
 
+import ge.pozdniakov.kameleoonTest.models.Vote;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotEmpty;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
 public class QuoteDTO {
 
-    private String text;
+    private Long id;
 
-    private Long rate;
+    @NotEmpty(message = "Your quote should not be Empty")
+    private String content;
 
-    private Long userId;
+    private Long currentVotes;
 
-    public String getText() {
-        return text;
+    private String username;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Long getRate() {
-        return rate;
+    public String getContent() {
+        return content;
     }
 
-    public void setRate(Long rate) {
-        this.rate = rate;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getCurrentVotes() {
+        return currentVotes;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCurrentVotes(Long currentVotes) {
+        this.currentVotes = currentVotes;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

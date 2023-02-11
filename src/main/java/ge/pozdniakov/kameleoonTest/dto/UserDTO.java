@@ -1,12 +1,33 @@
 package ge.pozdniakov.kameleoonTest.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+
+import java.util.List;
+
 public class UserDTO {
 
+    private Long id;
+
+    @NotEmpty(message = "username Should not be Empty")
     private String username;
 
+    @NotEmpty(message = "Password Should not be Empty")
     private String password;
 
+    @Email(message = "This is an Email, you make mistake")
+    @NotEmpty(message = "Email Should not be Empty")
     private String email;
+
+    private List<QuoteDTO> quotes;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;
@@ -30,5 +51,13 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<QuoteDTO> getQuotes() {
+        return quotes;
+    }
+
+    public void setQuotes(List<QuoteDTO> quotes) {
+        this.quotes = quotes;
     }
 }

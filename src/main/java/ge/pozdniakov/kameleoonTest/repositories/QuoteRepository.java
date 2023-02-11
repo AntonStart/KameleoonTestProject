@@ -3,6 +3,7 @@ package ge.pozdniakov.kameleoonTest.repositories;
 import ge.pozdniakov.kameleoonTest.models.Quote;
 import ge.pozdniakov.kameleoonTest.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,5 +12,11 @@ import java.util.List;
 public interface QuoteRepository extends JpaRepository<Quote, Long> {
 
     List<Quote> findAllByUser(User user);
+
+    Quote findFirstByUserOrderByUpdatedAtDesc(User user);
+
+    Quote findByContentAndCurrentVoteAndUser(String content, Long currentVote, User user);
+
+    void deleteByContentAndCurrentVoteAndUser(String content, Long currentVotes, User user);
 
 }

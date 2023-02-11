@@ -1,6 +1,10 @@
 package ge.pozdniakov.kameleoonTest.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import org.hibernate.validator.constraints.UniqueElements;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,10 +17,15 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "username")
+
+    @Column(name = "username", unique = true)
+//    @UniqueElements(message = "Such username already exists, choose another one")
+    @NotEmpty(message = "Username Should not be Empty")
     private String username;
 
     @Column(name = "email")
+    @Email(message = "This is an Email, you make mistake")
+    @NotEmpty(message = "Email Should not be Empty")
     private String email;
 
     @Column(name = "password")

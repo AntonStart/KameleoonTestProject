@@ -2,7 +2,11 @@ package ge.pozdniakov.kameleoonTest.models;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import org.hibernate.annotations.Cascade;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "quote")
@@ -14,13 +18,15 @@ public class Quote {
     private Long id;
 
     @Column(name = "content")
+    @NotEmpty(message = "Your quote should not be Empty")
     private String content;
 
-    @Column(name = "rate")
-    private Long rate;
+    @Column(name = "current_vote")
+    private Long currentVote;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @JoinColumn(name = "username", referencedColumnName = "username")
     private User user;
 
     @Column(name = "created_at")
@@ -45,14 +51,6 @@ public class Quote {
         this.content = content;
     }
 
-    public Long getRate() {
-        return rate;
-    }
-
-    public void setRate(Long rate) {
-        this.rate = rate;
-    }
-
     public User getUser() {
         return user;
     }
@@ -75,5 +73,13 @@ public class Quote {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Long getCurrentVote() {
+        return currentVote;
+    }
+
+    public void setCurrentVote(Long currentVote) {
+        this.currentVote = currentVote;
     }
 }

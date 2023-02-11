@@ -25,15 +25,14 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
         user.setCreatedAt(LocalDateTime.now());
-
         userRepository.save(user);
-    }
-
-    public User findUserByUsernameAndPassword(String username, String password){
-        return userRepository.findByUsernameAndPassword(username, password);
     }
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public User getUserByUsername(String username){
+        return userRepository.findUserByUsername(username);
     }
 }
