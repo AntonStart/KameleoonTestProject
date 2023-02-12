@@ -7,9 +7,7 @@ import java.util.List;
 
 public class UserDTO {
 
-    private Long id;
-
-    @NotEmpty(message = "username Should not be Empty")
+    @NotEmpty(message = "Username should not be Empty")
     private String username;
 
     @NotEmpty(message = "Password Should not be Empty")
@@ -20,14 +18,6 @@ public class UserDTO {
     private String email;
 
     private List<QuoteDTO> quotes;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;

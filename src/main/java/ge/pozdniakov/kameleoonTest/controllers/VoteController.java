@@ -1,12 +1,13 @@
 package ge.pozdniakov.kameleoonTest.controllers;
 
-import ge.pozdniakov.kameleoonTest.models.Quote;
-import ge.pozdniakov.kameleoonTest.models.Vote;
+import ge.pozdniakov.kameleoonTest.dto.VoteDTO;
 import ge.pozdniakov.kameleoonTest.services.VoteService;
+import ge.pozdniakov.kameleoonTest.util.KameleoonTestErrorResponse;
+import ge.pozdniakov.kameleoonTest.util.QuoteNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,8 +22,17 @@ public class VoteController {
         this.voteService = voteService;
     }
 
-    @GetMapping
-    public List<Vote> getDataForGraph(Quote quote){
-        return voteService.getAllByQuote(quote);
+    @GetMapping("/{id}")
+    public ResponseEntity<List<VoteDTO>> getDataForGraph(@PathVariable Long id){
+        return new ResponseEntity<>(voteService.getAllByQuote(id),HttpStatus.OK);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<KameleoonTestErrorResponse> handleException(QuoteNotFoundException quoteNotFoundException){
+        KameleoonTestErrorResponse personErrorResponse = new KameleoonTestErrorResponse(
+                "Quote with this id was not found!",
+                System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(personErrorResponse, HttpStatus.NOT_FOUND);
     }
 }

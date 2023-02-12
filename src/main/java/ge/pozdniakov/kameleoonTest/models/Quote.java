@@ -83,3 +83,4 @@ public class Quote {
         this.currentVote = currentVote;
     }
 }
+

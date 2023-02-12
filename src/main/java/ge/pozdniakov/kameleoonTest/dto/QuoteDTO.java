@@ -1,11 +1,8 @@
 package ge.pozdniakov.kameleoonTest.dto;
 
-import ge.pozdniakov.kameleoonTest.models.Vote;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class QuoteDTO {
 
@@ -15,7 +12,8 @@ public class QuoteDTO {
     private String content;
 
     private Long currentVotes;
-
+    
+    @NotEmpty(message = "Your quote should not be Empty")
     private String username;
 
     private LocalDateTime createdAt;

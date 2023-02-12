@@ -2,24 +2,21 @@ package ge.pozdniakov.kameleoonTest.services;
 
 import ge.pozdniakov.kameleoonTest.dto.QuoteDTO;
 import ge.pozdniakov.kameleoonTest.models.Quote;
-import ge.pozdniakov.kameleoonTest.models.User;
 import ge.pozdniakov.kameleoonTest.models.Vote;
 import ge.pozdniakov.kameleoonTest.repositories.QuoteRepository;
-import ge.pozdniakov.kameleoonTest.repositories.UserRepository;
 import ge.pozdniakov.kameleoonTest.repositories.VoteRepository;
 import ge.pozdniakov.kameleoonTest.util.Converter;
-import jakarta.persistence.Convert;
+import ge.pozdniakov.kameleoonTest.util.QuoteNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Service
 public class QuoteService {
@@ -33,15 +30,8 @@ public class QuoteService {
         this.voteRepository = voteRepository;
     }
 
-    public List<Quote> findAllByUser(User user){
-        return quoteRepository.findAllByUser(user);
-    }
-
-    public List<Quote> findAll(){
-        return quoteRepository.findAll();
-    }
-
-    public void addNewQuote(QuoteDTO quoteDTO){
+    //CREATE
+    public void createNewQuote(QuoteDTO quoteDTO){
         Quote quote = Converter.convertToQuote(quoteDTO);
 
         quote.setCurrentVote(0L);
@@ -51,6 +41,13 @@ public class QuoteService {
         quoteRepository.save(quote);
     }
 
+    //READ
+    public QuoteDTO getQuoteById(Long id){
+        return Converter
+                .convertToQuoteDTO(quoteRepository.findById(id).orElseThrow(QuoteNotFoundException::new));
+    }
+
+    //UPDATE
     public void updateQuote(QuoteDTO quoteDTO){
         Quote quote = Converter.convertToQuote(quoteDTO);
 
@@ -59,60 +56,63 @@ public class QuoteService {
         quoteRepository.save(quote);
     }
 
+    //DELETE
     public void deleteQuote(Long id){
         quoteRepository.deleteById(id);
     }
 
-    //todo refactoring this method
-    public Quote showRandom(){
+    //READ RANDOM
+    public QuoteDTO showRandom(){
         Long randomId = ThreadLocalRandom.current().nextLong(quoteRepository.count());
-        return quoteRepository
+        return Converter.convertToQuoteDTO(
+                quoteRepository
                 .findAll()
-                .get(randomId.intValue());
+                .get(randomId.intValue()));
     }
 
-
-
-    public void decreaseVote(QuoteDTO quoteDTO) {
+    //INCREASE VOTE
+    public void increaseVote(Long id) {
         Vote vote = new Vote();
-        vote.setCurrentRate(quoteDTO.getCurrentVotes() - 1);
-        addNewQuoteAndVoteInDB(quoteDTO, vote);
+        Quote quote = quoteRepository.findById(id).orElseThrow(QuoteNotFoundException::new);
+        vote.setCurrentRate(quote.getCurrentVote() + 1);
+        addNewQuoteAndVoteInDB(quote, vote);
     }
 
-
-    public void increaseVote(QuoteDTO quoteDTO) {
+    //DECREASE VOTE
+    public void decreaseVote(Long id) {
         Vote vote = new Vote();
-        vote.setCurrentRate(quoteDTO.getCurrentVotes() + 1);
-        addNewQuoteAndVoteInDB(quoteDTO, vote);
+        Quote quote = quoteRepository.findById(id).orElseThrow(QuoteNotFoundException::new);
+        vote.setCurrentRate(quote.getCurrentVote() - 1);
+        addNewQuoteAndVoteInDB(quote, vote);
     }
 
+    //auxiliary method for voting
     @Transactional
-    void addNewQuoteAndVoteInDB(QuoteDTO quoteDTO, Vote vote) {
-        vote.setDateOfVoting(LocalDateTime.now());
-        vote.setQuote(getQuoteById(quoteDTO.getId()));
-
-        voteRepository.save(vote);
-
-        Quote quote = getQuoteById(quoteDTO.getId());
-
+    void addNewQuoteAndVoteInDB(Quote quote, Vote vote) {
         quote.setCurrentVote(vote.getCurrentRate());
-
+        vote.setDateOfVoting(LocalDateTime.now());
+        vote.setQuote(quote);
+        voteRepository.save(vote);
         quoteRepository.save(quote);
     }
 
-    public Quote getQuoteById(Long id){
-        return quoteRepository.findById(id).orElse(null);
+    //READ TOP QUOTES
+    public List<QuoteDTO> qetTopQuotes(int count){
+        return quoteRepository
+                .findAll(PageRequest.of(0, count, Sort.Direction.DESC, "currentVote"))
+                .toList()
+                .stream()
+                .map(quote -> Converter.convertToQuoteDTO(quote))
+                .collect(Collectors.toList());
     }
 
-    public List<Quote> qetTopQuotes(int count){
+    //READ FLOP QUOTES
+    public List<QuoteDTO> qetFlopQuotes(int count){
         return quoteRepository
-                .findAll(PageRequest.of(0, count, Sort.Direction.DESC, "current_vote"))
-                .toList();
-    }
-
-    public List<Quote> qetFlopQuotes(int count){
-        return quoteRepository
-                .findAll(PageRequest.of(0, count, Sort.Direction.ASC, "current_vote"))
-                .toList();
+                .findAll(PageRequest.of(0, count, Sort.Direction.ASC, "currentVote"))
+                .toList()
+                .stream()
+                .map(quote -> Converter.convertToQuoteDTO(quote))
+                .collect(Collectors.toList());
     }
 }

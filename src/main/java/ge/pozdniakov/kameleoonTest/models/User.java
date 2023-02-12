@@ -13,17 +13,11 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-
     @Column(name = "username", unique = true)
-//    @UniqueElements(message = "Such username already exists, choose another one")
     @NotEmpty(message = "Username Should not be Empty")
     private String username;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     @Email(message = "This is an Email, you make mistake")
     @NotEmpty(message = "Email Should not be Empty")
     private String email;
@@ -36,14 +30,6 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Quote> quotes;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;

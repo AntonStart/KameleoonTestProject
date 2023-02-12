@@ -2,11 +2,10 @@ package ge.pozdniakov.kameleoonTest.util;
 
 import ge.pozdniakov.kameleoonTest.dto.QuoteDTO;
 import ge.pozdniakov.kameleoonTest.dto.UserDTO;
+import ge.pozdniakov.kameleoonTest.dto.VoteDTO;
 import ge.pozdniakov.kameleoonTest.models.Quote;
 import ge.pozdniakov.kameleoonTest.models.User;
-import ge.pozdniakov.kameleoonTest.repositories.QuoteRepository;
-import ge.pozdniakov.kameleoonTest.repositories.UserRepository;
-import ge.pozdniakov.kameleoonTest.repositories.VoteRepository;
+import ge.pozdniakov.kameleoonTest.models.Vote;
 
 import java.util.stream.Collectors;
 
@@ -15,7 +14,6 @@ public class Converter {
 
     public static User convertToUser(UserDTO userDTO) {
         User user = new User();
-        user.setId(userDTO.getId());
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
@@ -24,7 +22,6 @@ public class Converter {
 
     public static UserDTO convertToUserDTO(User user) {
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
         userDTO.setUsername(user.getUsername());
         userDTO.setEmail(user.getEmail());
         userDTO.setPassword(user.getPassword());
@@ -61,5 +58,16 @@ public class Converter {
         quoteDTO.setUpdatedAt(quote.getUpdatedAt());
 
         return quoteDTO;
+    }
+
+    public static VoteDTO convertToVoteDTO(Vote vote){
+        VoteDTO voteDTO = new VoteDTO();
+        
+        voteDTO.setId(vote.getId());
+        voteDTO.setCurrentVotes(vote.getCurrentRate());
+        voteDTO.setDateOfVoting(vote.getDateOfVoting());
+        voteDTO.setQuoteId(vote.getQuote().getId());
+
+        return voteDTO;
     }
 }
