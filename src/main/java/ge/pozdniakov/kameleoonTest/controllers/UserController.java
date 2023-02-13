@@ -10,10 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
@@ -44,12 +42,6 @@ public class UserController {
         userService.addNewUser(userDTO);
 
         return ResponseEntity.ok(HttpStatus.OK);
-    }
-
-    ///this method is required for debug
-    @GetMapping
-    public List<UserDTO> showAllUser(){
-        return userService.findAll();
     }
 
     @ExceptionHandler

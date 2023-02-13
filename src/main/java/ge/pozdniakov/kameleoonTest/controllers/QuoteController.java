@@ -44,7 +44,7 @@ public class QuoteController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PatchMapping("/update")
+    @PutMapping
     public ResponseEntity<HttpStatus> updateQuote(@RequestBody @Valid QuoteDTO quoteDTO,
                                                   BindingResult bindingResult) {
         if (bindingResult.hasErrors()){
