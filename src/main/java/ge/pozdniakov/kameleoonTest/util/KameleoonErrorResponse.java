@@ -1,10 +1,10 @@
 package ge.pozdniakov.kameleoonTest.util;
 
-public class KameleoonTestErrorResponse {
+public class KameleoonErrorResponse {
     private String message;
     private long timeStamp;
 
-    public KameleoonTestErrorResponse(String message, long timeStamp) {
+    public KameleoonErrorResponse(String message, long timeStamp) {
         this.message = message;
         this.timeStamp = timeStamp;
     }

@@ -2,7 +2,7 @@ package ge.pozdniakov.kameleoonTest.controllers;
 
 import ge.pozdniakov.kameleoonTest.dto.QuoteDTO;
 import ge.pozdniakov.kameleoonTest.services.QuoteService;
-import ge.pozdniakov.kameleoonTest.util.*;
+import ge.pozdniakov.kameleoonTest.util.KameleoonException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,6 @@ public class QuoteController {
         this.quoteService = quoteService;
     }
 
-    //Request Section
     @PostMapping
     public ResponseEntity<HttpStatus> addNewQuote(@RequestBody @Valid QuoteDTO quoteDTO,
                                                   BindingResult bindingResult) {
@@ -37,11 +36,11 @@ public class QuoteController {
                         .append(error.getDefaultMessage())
                         .append(";");
             }
-            throw new QuoteNotCreatedException(errorMsg.toString());
+            throw new KameleoonException(errorMsg.toString());
         }
         quoteService.createNewQuote(quoteDTO);
 
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping
@@ -56,32 +55,32 @@ public class QuoteController {
                         .append(error.getDefaultMessage())
                         .append(";");
             }
-            throw new QuoteNotUpdatedException(errorMsg.toString());
+            throw new KameleoonException(errorMsg.toString());
         }
         quoteService.updateQuote(quoteDTO);
 
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<QuoteDTO> showQuoteOnId(@PathVariable Long id) {
-        return new ResponseEntity<>(quoteService.getQuoteById(id),HttpStatus.OK);
+        return ResponseEntity.ok(quoteService.getQuoteById(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteQuote(@PathVariable Long id){
         quoteService.deleteQuote(id);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/random")
     public ResponseEntity<QuoteDTO> showRandomQuote(){
-        return new ResponseEntity<>(quoteService.showRandom(), HttpStatus.OK);
+        return ResponseEntity.ok(quoteService.showRandom());
     }
 
     @GetMapping("/top")
     public ResponseEntity<List<QuoteDTO>> getTopQuotes(@RequestParam("count") int count){
-        return new ResponseEntity<>(quoteService.qetTopQuotes(count), HttpStatus.OK);
+        return ResponseEntity.ok(quoteService.qetTopQuotes(count));
     }
 
     @GetMapping("/flop")
@@ -92,40 +91,12 @@ public class QuoteController {
     @PostMapping("/{id}/increment")
     public ResponseEntity<HttpStatus> increaseVotes(@PathVariable Long id){
         quoteService.increaseVote(id);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/decrement")
     public ResponseEntity<HttpStatus> decreaseVotes(@PathVariable Long id){
         quoteService.decreaseVote(id);
-        return ResponseEntity.ok(HttpStatus.OK);
-    }
-
-    //Exception Handler section
-    @ExceptionHandler
-    private ResponseEntity<KameleoonTestErrorResponse> handleException(QuoteNotCreatedException quoteNotCreatedException){
-        KameleoonTestErrorResponse userErrorResponse = new KameleoonTestErrorResponse(
-                quoteNotCreatedException.getMessage(),
-                System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<KameleoonTestErrorResponse> handleException(QuoteNotUpdatedException quoteNotUpdatedException){
-        KameleoonTestErrorResponse userErrorResponse = new KameleoonTestErrorResponse(
-                quoteNotUpdatedException.getMessage(),
-                System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<KameleoonTestErrorResponse> handleException(QuoteNotFoundException quoteNotFoundException){
-        KameleoonTestErrorResponse personErrorResponse = new KameleoonTestErrorResponse(
-                "Quote with this id was not found!",
-                System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(personErrorResponse, HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok().build();
     }
 }

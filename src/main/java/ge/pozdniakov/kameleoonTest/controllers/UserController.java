@@ -2,8 +2,7 @@ package ge.pozdniakov.kameleoonTest.controllers;
 
 import ge.pozdniakov.kameleoonTest.dto.UserDTO;
 import ge.pozdniakov.kameleoonTest.services.UserService;
-import ge.pozdniakov.kameleoonTest.util.KameleoonTestErrorResponse;
-import ge.pozdniakov.kameleoonTest.util.UserNotCreatedException;
+import ge.pozdniakov.kameleoonTest.util.KameleoonException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,19 +36,15 @@ public class UserController {
                         .append(error.getDefaultMessage())
                         .append(";");
             }
-            throw new UserNotCreatedException(errorMsg.toString());
+            throw new KameleoonException(errorMsg.toString());
         }
         userService.addNewUser(userDTO);
 
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
-    @ExceptionHandler
-    private ResponseEntity<KameleoonTestErrorResponse> handleException(UserNotCreatedException userNotCreatedException){
-        KameleoonTestErrorResponse userErrorResponse = new KameleoonTestErrorResponse(
-                userNotCreatedException.getMessage(),
-                System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> allUsers(){
+        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 }

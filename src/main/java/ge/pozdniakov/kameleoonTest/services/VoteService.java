@@ -5,7 +5,7 @@ import ge.pozdniakov.kameleoonTest.models.Quote;
 import ge.pozdniakov.kameleoonTest.repositories.QuoteRepository;
 import ge.pozdniakov.kameleoonTest.repositories.VoteRepository;
 import ge.pozdniakov.kameleoonTest.util.Converter;
-import ge.pozdniakov.kameleoonTest.util.QuoteNotFoundException;
+import ge.pozdniakov.kameleoonTest.util.KameleoonException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,12 +26,11 @@ public class VoteService {
         this.quoteRepository = quoteRepository;
     }
 
-    //READ DATA FROM GRAPH VOTE/TIME
     public List<VoteDTO> getAllByQuote(Long id){
-        Quote quote = quoteRepository.findById(id).orElseThrow(QuoteNotFoundException::new);
+        Quote quote = quoteRepository.findById(id).orElseThrow(KameleoonException::new);
         return voteRepository.findAllByQuoteOrderByDateOfVoting(quote)
                 .stream()
-                .map(vote -> Converter.convertToVoteDTO(vote))
+                .map(Converter::convertToVoteDTO)
                 .collect(Collectors.toList());
     }
 }

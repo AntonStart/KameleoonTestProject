@@ -29,7 +29,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    //CREATE
     @Transactional
     public void addNewUser(UserDTO userDTO) {
         User user = Converter.convertToUser(userDTO);
@@ -41,7 +40,7 @@ public class UserService {
     public List<UserDTO> findAll() {
         return userRepository.findAll()
                 .stream()
-                .map(user -> Converter.convertToUserDTO(user))
+                .map(Converter::convertToUserDTO)
                 .collect(Collectors.toList());
     }
 
