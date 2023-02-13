@@ -19,6 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class QuoteService {
 
     private final QuoteRepository quoteRepository;
@@ -31,6 +32,7 @@ public class QuoteService {
     }
 
     //CREATE
+    @Transactional
     public void createNewQuote(QuoteDTO quoteDTO){
         Quote quote = Converter.convertToQuote(quoteDTO);
 
@@ -48,6 +50,7 @@ public class QuoteService {
     }
 
     //UPDATE
+    @Transactional
     public void updateQuote(QuoteDTO quoteDTO){
         Quote quote = Converter.convertToQuote(quoteDTO);
 
@@ -57,6 +60,7 @@ public class QuoteService {
     }
 
     //DELETE
+    @Transactional
     public void deleteQuote(Long id){
         quoteRepository.deleteById(id);
     }
@@ -71,6 +75,7 @@ public class QuoteService {
     }
 
     //INCREASE VOTE
+    @Transactional
     public void increaseVote(Long id) {
         Vote vote = new Vote();
         Quote quote = quoteRepository.findById(id).orElseThrow(QuoteNotFoundException::new);
@@ -79,6 +84,7 @@ public class QuoteService {
     }
 
     //DECREASE VOTE
+    @Transactional
     public void decreaseVote(Long id) {
         Vote vote = new Vote();
         Quote quote = quoteRepository.findById(id).orElseThrow(QuoteNotFoundException::new);
