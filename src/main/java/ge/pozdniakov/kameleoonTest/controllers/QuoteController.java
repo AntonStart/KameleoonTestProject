@@ -3,6 +3,7 @@ package ge.pozdniakov.kameleoonTest.controllers;
 import ge.pozdniakov.kameleoonTest.dto.QuoteDTO;
 import ge.pozdniakov.kameleoonTest.services.QuoteService;
 import ge.pozdniakov.kameleoonTest.util.KameleoonException;
+import ge.pozdniakov.kameleoonTest.util.RestUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.ResultSet;
 import java.util.List;
 
 @RestController
@@ -27,17 +29,7 @@ public class QuoteController {
     @PostMapping
     public ResponseEntity<HttpStatus> addNewQuote(@RequestBody @Valid QuoteDTO quoteDTO,
                                                   BindingResult bindingResult) {
-        if (bindingResult.hasErrors()){
-            StringBuilder errorMsg = new StringBuilder();
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error: errors) {
-                errorMsg.append(error.getField())
-                        .append(" - ")
-                        .append(error.getDefaultMessage())
-                        .append(";");
-            }
-            throw new KameleoonException(errorMsg.toString());
-        }
+        RestUtils.validateBindingResult(bindingResult);
         quoteService.createNewQuote(quoteDTO);
 
         return ResponseEntity.ok().build();
@@ -46,17 +38,7 @@ public class QuoteController {
     @PutMapping
     public ResponseEntity<HttpStatus> updateQuote(@RequestBody @Valid QuoteDTO quoteDTO,
                                                   BindingResult bindingResult) {
-        if (bindingResult.hasErrors()){
-            StringBuilder errorMsg = new StringBuilder();
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error: errors) {
-                errorMsg.append(error.getField())
-                        .append(" - ")
-                        .append(error.getDefaultMessage())
-                        .append(";");
-            }
-            throw new KameleoonException(errorMsg.toString());
-        }
+        RestUtils.validateBindingResult(bindingResult);
         quoteService.updateQuote(quoteDTO);
 
         return ResponseEntity.ok().build();

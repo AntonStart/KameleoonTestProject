@@ -3,6 +3,7 @@ package ge.pozdniakov.kameleoonTest.controllers;
 import ge.pozdniakov.kameleoonTest.dto.UserDTO;
 import ge.pozdniakov.kameleoonTest.services.UserService;
 import ge.pozdniakov.kameleoonTest.util.KameleoonException;
+import ge.pozdniakov.kameleoonTest.util.RestUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,17 +28,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<HttpStatus> addNewUser(@RequestBody @Valid UserDTO userDTO,
                                                  BindingResult bindingResult) {
-        if (bindingResult.hasErrors()){
-            StringBuilder errorMsg = new StringBuilder();
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error: errors) {
-                errorMsg.append(error.getField())
-                        .append(" - ")
-                        .append(error.getDefaultMessage())
-                        .append(";");
-            }
-            throw new KameleoonException(errorMsg.toString());
-        }
+        RestUtils.validateBindingResult(bindingResult);
         userService.addNewUser(userDTO);
 
         return ResponseEntity.ok().build();
