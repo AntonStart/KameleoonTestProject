@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import java.net.http.HttpResponse;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ public class UserService {
     }
 
     //CREATE
-    public void addNewUser(UserDTO userDTO){
+    public void addNewUser(UserDTO userDTO) {
         User user = Converter.convertToUser(userDTO);
         user.setCreatedAt(LocalDateTime.now());
         userRepository.save(user);

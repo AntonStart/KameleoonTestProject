@@ -7,6 +7,10 @@ import ge.pozdniakov.kameleoonTest.models.Quote;
 import ge.pozdniakov.kameleoonTest.models.User;
 import ge.pozdniakov.kameleoonTest.models.Vote;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 import java.util.stream.Collectors;
 
 public class Converter {
@@ -16,7 +20,20 @@ public class Converter {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
+
+        MessageDigest digest = null;
+
+        try {
+            digest = MessageDigest.getInstance("SHA3-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        byte[] hash = digest.digest(
+                userDTO.getPassword().getBytes(StandardCharsets.UTF_8));
+        String encodePassword = HexFormat.of().formatHex(hash);
+
+        user.setPassword(encodePassword);
         return user;
     }
 

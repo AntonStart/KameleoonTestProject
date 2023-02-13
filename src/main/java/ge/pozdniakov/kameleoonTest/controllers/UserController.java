@@ -13,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
@@ -27,7 +28,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> addNewUser(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult){
+    public ResponseEntity<HttpStatus> addNewUser(@RequestBody @Valid UserDTO userDTO,
+                                                 BindingResult bindingResult) {
         if (bindingResult.hasErrors()){
             StringBuilder errorMsg = new StringBuilder();
             List<FieldError> errors = bindingResult.getFieldErrors();
