@@ -2,14 +2,12 @@ package ge.pozdniakov.kameleoonTest.controllers;
 
 import ge.pozdniakov.kameleoonTest.dto.UserDTO;
 import ge.pozdniakov.kameleoonTest.services.UserService;
-import ge.pozdniakov.kameleoonTest.util.KameleoonException;
 import ge.pozdniakov.kameleoonTest.util.RestUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
